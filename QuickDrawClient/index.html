@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>QuickDraw</title>
+  </head>
+  <body>
+    <!-- Login Form -->
+    <div class="container" id="loginContainer">
+      <form id="loginForm">
+        <input
+          type="text"
+          id="userNameInput"
+          name="userName"
+          placeholder="Type your username..."
+          required
+        />
+        <button type="submit" id="loginButton">Login</button>
+      </form>
+    </div>
+
+    <!-- Room Buttons -->
+    <div class="container hidden" id="roomsContainer">
+      <button id="joinButton">Join</button>
+      <button id="createButton">Create</button>
+    </div>
+
+    <!-- Create Room Form -->
+    <div class="container hidden" id="createContainer">
+      <form id="createRoomForm">
+        <input
+          type="text"
+          id="roomNameInput"
+          name="roomName"
+          placeholder="Type room name..."
+          required
+        />
+        <button type="submit" id="createRoomSubmitButton">Submit</button>
+      </form>
+    </div>
+
+    <!-- Join Room -->
+    <div class="container hidden" id="joinContainer">
+      <form id="joinRoomForm">
+        <select id="roomsOptions"></select>
+
+        <br /><br />
+
+        <button type="submit" id="joinRoomSubmitButton">Submit</button>
+      </form>
+    </div>
+
+    <!-- Drawing Board -->
+    <div class="container hidden" id="drawingContainer">
+      <div id="grid-container"></div>
+
+      <div id="size-options">
+        <button class="size-button" data-rows="8" data-cols="12">Small</button>
+        <button class="size-button" data-rows="16" data-cols="24">
+          Medium
+        </button>
+        <button class="size-button" data-rows="24" data-cols="36">Big</button>
+      </div>
+
+      <div id="options">
+        <input
+          type="color"
+          class="option-button"
+          id="colorPicker"
+          value="#000000"
+        />
+        <button class="option-button" id="clear">🗑️</button>
+      </div>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
