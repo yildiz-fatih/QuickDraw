@@ -8,21 +8,12 @@
 </head>
 <body class="bg-light">
 <!-- Navigation Bar -->
-<nav class="navbar navbar-dark bg-dark navbar-expand-lg py-3 mb-3">
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg shadow-sm py-3 mb-3">
     <div class="container-fluid">
-        <!-- Brand left side -->
-        <a class="navbar-brand ms-3 fw-bold">QuickDraw</a>
-
-        <!-- Right-aligned info sections -->
-        <div class="d-flex flex-row gap-4 me-3">
-            <div id="userInfo" class="text-light d-flex align-items-center">
-                <i class="bi bi-person-fill "></i>
-                <span>Welcome Guest</span>
-            </div>
-            <div id="roomInfo" class="text-light d-flex align-items-center">
-                <i class="bi bi-door-closed-fill "></i>
-                <span>No Room</span>
-            </div>
+        <a class="navbar-brand ms-3">QuickDraw</a>
+        <div class="ms-auto d-flex align-items-center gap-3">
+            <span class="badge" id="userInfo"></span>
+            <span class="badge" id="roomInfo"></span>
         </div>
     </div>
 </nav>
