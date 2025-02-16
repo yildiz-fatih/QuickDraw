@@ -14,32 +14,56 @@ public class DrawHub : Hub
             UserName = userName
         };
         
-        UserRepository.Users.Add(user);
-        
-        Console.WriteLine($"{Context.ConnectionId} with username {userName} is logged in");
+        UserRepository.AddUser(user);
     }
-
+    
     public async Task JoinRoom(string roomName)
     {
-        var room = RoomRepository.Rooms.FirstOrDefault(r => r.Name == roomName);
+        // Get current user
+        var user = UserRepository.GetUserByConnectionId(Context.ConnectionId);
+
+        // Find or create room
+        var room = RoomRepository.GetRoomByName(roomName);
         if (room == null)
         {
-            room = new Room()
-            {
-                Name = roomName
+            room = new Room { 
+                Name = roomName, 
+                Users = new List<User>() 
             };
-            RoomRepository.Rooms.Add(room);
-            
-            await Clients.All.SendAsync("ReceiveAvailableRooms", 
-                RoomRepository.Rooms.Select(r => r.Name).ToList());
+            RoomRepository.AddRoom(room);
         }
 
+        room.Users.Add(user);
+        
         await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
-        await Clients.Caller.SendAsync("RoomJoined", room.Name);
 
-        Console.WriteLine($"User {Context.ConnectionId} " +
-                          $"with username {UserRepository.Users.FirstOrDefault(user => user.ConnectionId == Context.ConnectionId).UserName} " +
-                          $"joined room: {roomName}");
+        // Update client on the current list of rooms
+        await Clients.All.SendAsync("ReceiveAvailableRooms", 
+            RoomRepository.GetAvailableRoomNames());
+        
+        // Send updated room users to everyone in the room
+        await Clients.Group(roomName).SendAsync("RoomJoined", 
+            room);
+    }
+
+    public override async Task OnDisconnectedAsync(Exception? exception)
+    {
+        var user = UserRepository.GetUserByConnectionId(Context.ConnectionId);
+        if (user != null)
+        {
+            foreach (var room in RoomRepository.Rooms.Where(r => r.Users.Contains(user)))
+            {
+                room.Users.Remove(user);
+                await Clients.Group(room.Name).SendAsync("UsersInRoomUpdated", 
+                    room.Users.Select(u => u.UserName).ToList());
+            
+                if (!room.Users.Any())
+                {
+                    RoomRepository.RemoveRoom(room);
+                }
+            }
+        }
+        await base.OnDisconnectedAsync(exception);
     }
     
 }
