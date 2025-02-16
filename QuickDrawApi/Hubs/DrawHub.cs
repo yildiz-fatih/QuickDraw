@@ -49,21 +49,37 @@ public class DrawHub : Hub
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         var user = UserRepository.GetUserByConnectionId(Context.ConnectionId);
-        if (user != null)
+        if (user == null)
         {
-            foreach (var room in RoomRepository.Rooms.Where(r => r.Users.Contains(user)))
+            await base.OnDisconnectedAsync(exception);
+            return;
+        }
+
+        var room = RoomRepository.Rooms.FirstOrDefault(r => r.Users.Contains(user));
+        if (room != null)
+        {
+            room.Users.Remove(user);
+            await Clients.Group(room.Name).SendAsync("RoomLeft", room.Users.Select(u => u.UserName).ToList());
+
+            if (!room.Users.Any())
             {
-                room.Users.Remove(user);
-                await Clients.Group(room.Name).SendAsync("UsersInRoomUpdated", 
-                    room.Users.Select(u => u.UserName).ToList());
-            
-                if (!room.Users.Any())
-                {
-                    RoomRepository.RemoveRoom(room);
-                }
+                RoomRepository.RemoveRoom(room);
             }
         }
+
+        UserRepository.RemoveUser(user);
+    
         await base.OnDisconnectedAsync(exception);
+    }
+
+    public async Task BroadcastDrawingData(DrawingData drawingData)
+    {
+        await Clients.OthersInGroup(drawingData.RoomName).SendAsync("ReceiveDrawingData", drawingData);
+    }
+
+    public async Task BroadcastClearGrid(string roomName)
+    {
+        await Clients.OthersInGroup(roomName).SendAsync("ReceiveClearGrid");
     }
     
 }

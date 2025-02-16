@@ -15,4 +15,9 @@ public static class UserRepository
     {
         Users.Add(user);
     }
+
+    public static void RemoveUser(User user)
+    {
+        Users.Remove(user);
+    }
 }
