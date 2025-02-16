@@ -1,13 +1,14 @@
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap";
 import * as signalR from "@microsoft/signalr";
 import {startApp} from "./drawing";
-import {clearDOM, showInDOM, hideInDOM} from "./utils";
+import {clearDOM, hideInDOM, showInDOM} from "./utils";
 
 // Initial values
 let currentUserName = "";
 let currentRoomName = "";
 
 // DOM Elements
-const infoContainer = document.getElementById("infoContainer");
 const userInfoElement = document.getElementById("userInfo");
 const roomInfoElement = document.getElementById("roomInfo");
 
@@ -40,7 +41,6 @@ loginForm.addEventListener("submit", (e) => {
     clearDOM();
 
     showInDOM(roomsContainer);
-    showInDOM(infoContainer);
 
     userInfoElement.textContent = `Welcome ${currentUserName}`;
 });
@@ -100,10 +100,5 @@ connection.on("RoomJoined", (room) => {
     startApp();
 
     // Build and update the room info message
-    let roomInfoMessage = "";
-    roomInfoMessage += "Users in " + currentRoomName + ":\n";
-    room.users.forEach((user) => {
-        roomInfoMessage += user.userName + "\n";
-    })
-    roomInfoElement.textContent = roomInfoMessage;
+    roomInfoElement.textContent = `Users in ${currentRoomName}: ${room.users.map(user => user.userName).join(", ")}`;
 });

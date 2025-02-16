@@ -1,14 +1,3 @@
-.hidden {
-    display: none;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0;
-}
-
 #grid-container {
     width: 768px;
     height: 512px;
@@ -22,20 +11,17 @@ body {
     box-sizing: border-box;
 }
 
-button,
-input[type="color"] {
-    font-size: 24px;
-    padding: 16px 24px;
-    margin: 24px;
-    border-radius: 4px;
-    cursor: pointer;
-    min-width: 120px;
-    min-height: 56px;
+
+#userInfo, #roomInfo {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
 }
 
-#infoContainer div {
-    margin-top: 10px;
-    padding: 5px;
-    background: #f0f0f0;
-    border-radius: 4px;
+#drawingContainer {
+    min-height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
 }

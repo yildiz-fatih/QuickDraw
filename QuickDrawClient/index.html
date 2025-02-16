@@ -6,80 +6,97 @@
     <link rel="stylesheet" href="./style.css"/>
     <title>QuickDraw</title>
 </head>
-<body>
-<!-- Information Container -->
-<div class="container hidden" id="infoContainer">
-    <div id="userInfo"></div>
-    <div id="roomInfo"></div>
-</div>
+<body class="bg-light">
+<!-- Navigation Bar -->
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg py-3 mb-3">
+    <div class="container-fluid">
+        <!-- Brand left side -->
+        <a class="navbar-brand ms-3 fw-bold">QuickDraw</a>
 
-<!-- Login Form -->
-<div class="container" id="loginContainer">
-    <form id="loginForm">
-        <input
-                type="text"
-                id="userNameInput"
-                name="userName"
-                placeholder="Type your username..."
-                required
-        />
-        <button type="submit" id="loginButton">Login</button>
-    </form>
-</div>
+        <!-- Right-aligned info sections -->
+        <div class="d-flex flex-row gap-4 me-3">
+            <div id="userInfo" class="text-light d-flex align-items-center">
+                <i class="bi bi-person-fill "></i>
+                <span>Welcome Guest</span>
+            </div>
+            <div id="roomInfo" class="text-light d-flex align-items-center">
+                <i class="bi bi-door-closed-fill "></i>
+                <span>No Room</span>
+            </div>
+        </div>
+    </div>
+</nav>
 
-<div class="container hidden" id="roomsContainer">
-    <h1>Welcome!</h1>
-    <p>Please choose one option to continue:</p>
-    <div class="roomOptionsButtons">
-        <button id="joinARoomButton">Join a Room</button>
-        <button id="createARoomButton">Create a Room</button>
+<main>
+    <!-- Login Form -->
+    <div class="container card mx-auto" style="max-width: 400px;" id="loginContainer">
+        <div class="card-body">
+            <form id="loginForm">
+                <div class="mb-3">
+                    <input type="text" class="form-control form-control-lg"
+                           id="userNameInput" placeholder="Enter username" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 btn-lg">Login</button>
+            </form>
+        </div>
     </div>
 
-    <!-- Join Room Form -->
-    <form id="joinRoomForm" class="hidden">
-        <select id="roomsOptions"></select>
+    <!-- Room Selection Section -->
+    <div class="container d-none" id="roomsContainer">
+        <div class="card mx-auto" style="max-width: 500px;">
+            <div class="card-body text-center">
+                <h1 class="card-title mb-4">Welcome!</h1>
+                <div class="d-grid gap-3">
+                    <button class="btn btn-outline-primary btn-lg" id="joinARoomButton">Join Room</button>
+                    <button class="btn btn-outline-success btn-lg" id="createARoomButton">Create Room</button>
+                </div>
 
-        <br/><br/>
+                <!-- Join Room Form -->
+                <form id="joinRoomForm" class="mt-4 d-none">
+                    <select class="form-select mb-3" id="roomsOptions"></select>
+                    <button type="submit" class="btn btn-primary w-100">Join</button>
+                </form>
 
-        <button type="submit" id="joinRoomSubmit">Submit</button>
-    </form>
-
-    <!-- Create Room Form -->
-    <form id="createRoomForm" class="hidden">
-        <input
-                type="text"
-                id="roomNameInput"
-                name="roomName"
-                placeholder="Type room name..."
-                required
-        />
-        <button type="submit" id="createRoomSubmit">Submit</button>
-    </form>
-</div>
-
-<!-- Drawing Board -->
-<div class="container hidden" id="drawingContainer">
-    <div id="grid-container"></div>
-
-    <div id="size-options">
-        <button class="size-button" data-rows="8" data-cols="12">Small</button>
-        <button class="size-button" data-rows="16" data-cols="24">
-            Medium
-        </button>
-        <button class="size-button" data-rows="24" data-cols="36">Big</button>
+                <!-- Create Room Form -->
+                <form id="createRoomForm" class="mt-4 d-none">
+                    <input type="text" class="form-control mb-3"
+                           id="roomNameInput" placeholder="Room name" required>
+                    <button type="submit" class="btn btn-success w-100">Create</button>
+                </form>
+            </div>
+        </div>
     </div>
 
-    <div id="options">
-        <input
-                type="color"
-                class="option-button"
-                id="colorPicker"
-                value="#000000"
-        />
-        <button class="option-button" id="clear">🗑️</button>
-    </div>
-</div>
+    <!-- Drawing Board -->
+    <div class="container d-none mx-auto" id="drawingContainer">
+        <div id="grid-container"></div>
 
+        <div class="d-flex flex-wrap justify-content-center align-items-center gap-2 my-3">
+            <!-- Grid Size Toggle Buttons using Bootstrap 5's button-check -->
+            <div class="btn-group" role="group" aria-label="Grid size">
+                <input type="radio" class="btn-check" name="sizeOptions" id="smallSize" autocomplete="off" data-rows="8"
+                       data-cols="12">
+                <label class="btn btn-outline-secondary" for="smallSize">Small</label>
+
+                <input type="radio" class="btn-check" name="sizeOptions" id="mediumSize" autocomplete="off"
+                       data-rows="16" data-cols="24" checked>
+                <label class="btn btn-outline-secondary" for="mediumSize">Medium</label>
+
+                <input type="radio" class="btn-check" name="sizeOptions" id="bigSize" autocomplete="off" data-rows="24"
+                       data-cols="36">
+                <label class="btn btn-outline-secondary" for="bigSize">Big</label>
+            </div>
+
+            <input type="color" class="form-control form-control-color"
+                   id="colorPicker" value="#000000" title="Choose color">
+
+            <button class="btn btn-light" id="clear">
+                🗑️
+            </button>
+        </div>
+
+    </div>
+</main>
 <script type="module" src="./app.js"></script>
 </body>
 </html>
