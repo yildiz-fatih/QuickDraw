@@ -11,7 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@microsoft/signalr": "^8.0.7"
+    "@microsoft/signalr": "^8.0.7",
+    "bootstrap": "^5.3.3"
   },
   "devDependencies": {
     "parcel": "^2.13.3",
