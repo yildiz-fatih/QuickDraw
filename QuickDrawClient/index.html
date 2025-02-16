@@ -1,80 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./style.css" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="./style.css"/>
     <title>QuickDraw</title>
-  </head>
-  <body>
-    <!-- Login Form -->
-    <div class="container" id="loginContainer">
-      <form id="loginForm">
+</head>
+<body>
+<!-- Information Container -->
+<div class="container hidden" id="infoContainer">
+    <div id="userInfo"></div>
+    <div id="roomInfo"></div>
+</div>
+
+<!-- Login Form -->
+<div class="container" id="loginContainer">
+    <form id="loginForm">
         <input
-          type="text"
-          id="userNameInput"
-          name="userName"
-          placeholder="Type your username..."
-          required
+                type="text"
+                id="userNameInput"
+                name="userName"
+                placeholder="Type your username..."
+                required
         />
         <button type="submit" id="loginButton">Login</button>
-      </form>
+    </form>
+</div>
+
+<div class="container hidden" id="roomsContainer">
+    <h1>Welcome!</h1>
+    <p>Please choose one option to continue:</p>
+    <div class="roomOptionsButtons">
+        <button id="joinARoomButton">Join a Room</button>
+        <button id="createARoomButton">Create a Room</button>
     </div>
 
-    <!-- Room Buttons -->
-    <div class="container hidden" id="roomsContainer">
-      <button id="joinButton">Join</button>
-      <button id="createButton">Create</button>
-    </div>
-
-    <!-- Create Room Form -->
-    <div class="container hidden" id="createContainer">
-      <form id="createRoomForm">
-        <input
-          type="text"
-          id="roomNameInput"
-          name="roomName"
-          placeholder="Type room name..."
-          required
-        />
-        <button type="submit" id="createRoomSubmitButton">Submit</button>
-      </form>
-    </div>
-
-    <!-- Join Room -->
-    <div class="container hidden" id="joinContainer">
-      <form id="joinRoomForm">
+    <!-- Join Room Form -->
+    <form id="joinRoomForm" class="hidden">
         <select id="roomsOptions"></select>
 
-        <br /><br />
+        <br/><br/>
 
-        <button type="submit" id="joinRoomSubmitButton">Submit</button>
-      </form>
-    </div>
+        <button type="submit" id="joinRoomSubmit">Submit</button>
+    </form>
 
-    <!-- Drawing Board -->
-    <div class="container hidden" id="drawingContainer">
-      <div id="grid-container"></div>
+    <!-- Create Room Form -->
+    <form id="createRoomForm" class="hidden">
+        <input
+                type="text"
+                id="roomNameInput"
+                name="roomName"
+                placeholder="Type room name..."
+                required
+        />
+        <button type="submit" id="createRoomSubmit">Submit</button>
+    </form>
+</div>
 
-      <div id="size-options">
+<!-- Drawing Board -->
+<div class="container hidden" id="drawingContainer">
+    <div id="grid-container"></div>
+
+    <div id="size-options">
         <button class="size-button" data-rows="8" data-cols="12">Small</button>
         <button class="size-button" data-rows="16" data-cols="24">
-          Medium
+            Medium
         </button>
         <button class="size-button" data-rows="24" data-cols="36">Big</button>
-      </div>
-
-      <div id="options">
-        <input
-          type="color"
-          class="option-button"
-          id="colorPicker"
-          value="#000000"
-        />
-        <button class="option-button" id="clear">🗑️</button>
-      </div>
     </div>
 
-    <script type="module" src="./app.js"></script>
-  </body>
+    <div id="options">
+        <input
+                type="color"
+                class="option-button"
+                id="colorPicker"
+                value="#000000"
+        />
+        <button class="option-button" id="clear">🗑️</button>
+    </div>
+</div>
+
+<script type="module" src="./app.js"></script>
+</body>
 </html>
