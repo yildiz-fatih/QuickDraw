@@ -2,7 +2,7 @@ import * as signalR from "@microsoft/signalr";
 import {state} from "./state";
 import {clearDOM, showInDOM} from "./domUtils";
 import {domElements} from "./domElements";
-import {initializeDrawing, clearGrid} from "./drawingManager";
+import {initializeDrawing, clearGrid, drawCell} from "./drawingManager";
 
 export let connection;
 
@@ -23,7 +23,7 @@ export function initializeSignalREvents() {
         const optionsDropdown = document.getElementById("roomsOptions");
         optionsDropdown.innerHTML = ""; // Clear existing options
 
-        if (Array.isArray(roomNames) && roomNames.length > 0) {
+        if (roomNames.length > 0) {
             roomNames.forEach((name) => {
                 const option = document.createElement("option");
                 option.value = name;
@@ -54,9 +54,7 @@ export function initializeSignalREvents() {
     });
 
     connection.on("ReceiveDrawingData", (data) => {
-        const cell = domElements.gridContainer.querySelector(`[data-index="${data.cellIndex}"]`);
-
-        cell.style.backgroundColor = data.color;
+        drawCell(data.cellIndex, data.color);
     });
 
     connection.on("ReceiveClearGrid", () => {

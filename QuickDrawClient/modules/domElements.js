@@ -2,6 +2,7 @@ export const domElements = {
     userInfoElement: document.getElementById("userInfo"),
     roomInfoElement: document.getElementById("roomInfo"),
 
+    drawingContainer: document.getElementById("drawingContainer"),
     gridContainer: document.getElementById("grid-container"),
     roomsContainer: document.getElementById("roomsContainer"),
 
@@ -11,4 +12,7 @@ export const domElements = {
 
     joinARoomButton: document.getElementById("joinARoomButton"),
     createARoomButton: document.getElementById("createARoomButton"),
+
+    colorPicker: document.getElementById("colorPicker"),
+    clearBtn: document.getElementById("clear"),
 };

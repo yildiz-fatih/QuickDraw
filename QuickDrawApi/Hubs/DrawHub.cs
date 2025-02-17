@@ -17,6 +17,9 @@ public class DrawHub : Hub
         UserRepository.AddUser(user);
         
         await Clients.Caller.SendAsync("UserLoggedIn", user.UserName);
+        
+        await Clients.All.SendAsync("ReceiveAvailableRooms", 
+            RoomRepository.GetAvailableRoomNames());
     }
     
     public async Task JoinRoom(string roomName)

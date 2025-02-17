@@ -17,7 +17,7 @@ export class DrawingData {
 }
 
 export function initializeDrawing() {
-    showInDOM(document.getElementById("drawingContainer"))
+    showInDOM(domElements.drawingContainer)
 
     setupGrid();
     initDrawing();
@@ -40,7 +40,6 @@ function setupGrid() {
     }
 }
 
-/* not real time yet! */
 export function clearGrid() {
     domElements.gridContainer.querySelectorAll(".grid-cell").forEach((cell) => {
         cell.style.backgroundColor = "transparent";
@@ -54,11 +53,8 @@ function initDrawing() {
             e.target.style.backgroundColor = currentColor;
 
             const cellIndex = parseInt(e.target.getAttribute("data-index"));
-            const drawingData = {
-                roomName: state.currentRoomName,
-                cellIndex: cellIndex,
-                color: currentColor
-            };
+            const drawingData =  new DrawingData(state.currentRoomName, cellIndex, currentColor);
+
             connection.invoke("BroadcastDrawingData", drawingData);
         }
     });
@@ -68,11 +64,8 @@ function initDrawing() {
             e.target.style.backgroundColor = currentColor;
 
             const cellIndex = parseInt(e.target.getAttribute("data-index"));
-            const drawingData = {
-                roomName: state.currentRoomName,
-                cellIndex: cellIndex,
-                color: currentColor
-            };
+            const drawingData =  new DrawingData(state.currentRoomName, cellIndex, currentColor);
+
             connection.invoke("BroadcastDrawingData", drawingData);
         }
     });
@@ -82,15 +75,17 @@ function initDrawing() {
     });
 }
 
-function initControlButtons() {
-    const colorPicker = document.getElementById("colorPicker");
-    const clearBtn = document.getElementById("clear");
+export function drawCell(cellIndex, color) {
+    const cell = domElements.gridContainer.querySelector(`[data-index="${cellIndex}"]`);
+    cell.style.backgroundColor = color;
+}
 
-    colorPicker.addEventListener("input", (e) => {
+function initControlButtons() {
+    domElements.colorPicker.addEventListener("input", (e) => {
         currentColor = e.target.value;
     });
 
-    clearBtn.addEventListener("click", () => {
+    domElements.clearBtn.addEventListener("click", () => {
         clearGrid();
 
         connection.invoke("BroadcastClearGrid", state.currentRoomName);

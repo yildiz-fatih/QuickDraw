@@ -1,5 +1,4 @@
 import {domElements} from "./domElements";
-import {state} from "./state";
 import {connection} from "./signalRService";
 import {hideInDOM, showInDOM} from "./domUtils";
 
@@ -27,8 +26,6 @@ export function initializeEventHandlers() {
         const roomName = document.getElementById("roomNameInput").value;
 
         connection.invoke("JoinRoom", roomName);
-
-        state.currentRoomName = roomName;
     });
 
     domElements.joinRoomForm.addEventListener("submit", (e) => {
@@ -37,7 +34,5 @@ export function initializeEventHandlers() {
         const roomName = document.getElementById("roomsOptions").value;
 
         connection.invoke("JoinRoom", roomName);
-
-        state.currentRoomName = roomName;
     })
 }
