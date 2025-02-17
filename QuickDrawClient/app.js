@@ -3,9 +3,19 @@ import "bootstrap";
 import {startConnection, initializeSignalREvents} from "./modules/signalRService";
 import {initializeEventHandlers} from "./modules/eventHandlers";
 
-// Initialize SignalR connection
-await startConnection();
-initializeSignalREvents();
+(async () => {
+    await startApp();
+})();
 
-// Event Listeners
-initializeEventHandlers();
+async function startApp() {
+    try {
+        // Initialize SignalR connection
+        await startConnection();
+        initializeSignalREvents();
+
+        // Event Listeners
+        initializeEventHandlers();
+    } catch (error) {
+        console.error('Error starting app:', error);
+    }
+}

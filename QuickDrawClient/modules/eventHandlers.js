@@ -1,19 +1,14 @@
 import {domElements} from "./domElements";
 import {state} from "./state";
 import {connection} from "./signalRService";
-import {clearDOM, hideInDOM, showInDOM} from "./domUtils";
+import {hideInDOM, showInDOM} from "./domUtils";
 
 export function initializeEventHandlers() {
     domElements.loginForm.addEventListener("submit", (e) => {
         e.preventDefault();
-        state.currentUserName = document.getElementById("userNameInput").value;
-        connection.invoke("Login", state.currentUserName);
 
-        clearDOM();
-
-        showInDOM(domElements.roomsContainer);
-
-        domElements.userInfoElement.textContent = `Welcome ${state.currentUserName}`;
+        const userName = document.getElementById("userNameInput").value;
+        connection.invoke("Login", userName);
     });
 
     domElements.joinARoomButton.addEventListener("click", () => {

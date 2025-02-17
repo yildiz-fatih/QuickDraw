@@ -1,6 +1,6 @@
 import * as signalR from "@microsoft/signalr";
 import {state} from "./state";
-import {clearDOM} from "./domUtils";
+import {clearDOM, showInDOM} from "./domUtils";
 import {domElements} from "./domElements";
 import {initializeDrawing, clearGrid} from "./drawingManager";
 
@@ -32,6 +32,14 @@ export function initializeSignalREvents() {
             });
         }
     });
+
+    connection.on("UserLoggedIn", (userName) => {
+        state.currentUserName = userName;
+
+        clearDOM();
+        showInDOM(domElements.roomsContainer);
+        domElements.userInfoElement.textContent = `Welcome ${state.currentUserName}`;
+    })
 
     connection.on("RoomJoined", (room) => {
         state.currentRoomName = room.name;
