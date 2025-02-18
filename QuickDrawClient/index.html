@@ -1,78 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="./style.css"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+
     <title>QuickDraw</title>
-</head>
-<body class="bg-light">
-<!-- Navigation Bar -->
-<nav class="navbar navbar-dark bg-dark navbar-expand-lg shadow-sm py-3 mb-3">
-    <div class="container-fluid">
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav
+      class="navbar navbar-dark bg-dark navbar-expand-lg shadow-sm py-3 mb-3"
+    >
+      <div class="container-fluid">
         <a class="navbar-brand ms-3">QuickDraw</a>
         <div class="ms-auto d-flex align-items-center gap-3">
-            <span class="badge" id="userInfo"></span>
-            <span class="badge" id="roomInfo"></span>
+          <span class="badge" id="userInfo"></span>
+          <span class="badge" id="roomInfo"></span>
         </div>
-    </div>
-</nav>
+      </div>
+    </nav>
 
-<main>
-    <!-- Login Form -->
-    <div class="container card mx-auto" style="max-width: 400px;" id="loginContainer">
+    <main>
+      <!-- Login Form -->
+      <div
+        class="container card mx-auto"
+        style="max-width: 400px"
+        id="loginContainer"
+      >
         <div class="card-body">
-            <form id="loginForm">
-                <div class="mb-3">
-                    <input type="text" class="form-control form-control-lg"
-                           id="userNameInput" placeholder="Enter username" required>
-                </div>
-                <button type="submit" class="btn btn-primary w-100 btn-lg">Login</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Room Selection Section -->
-    <div class="container d-none" id="roomsContainer">
-        <div class="card mx-auto" style="max-width: 500px;">
-            <div class="card-body text-center">
-                <h1 class="card-title mb-4">Welcome!</h1>
-                <div class="d-grid gap-3">
-                    <button class="btn btn-outline-primary btn-lg" id="joinARoomButton">Join Room</button>
-                    <button class="btn btn-outline-success btn-lg" id="createARoomButton">Create Room</button>
-                </div>
-
-                <!-- Join Room Form -->
-                <form id="joinRoomForm" class="mt-4 d-none">
-                    <select class="form-select mb-3" id="roomsOptions"></select>
-                    <button type="submit" class="btn btn-primary w-100">Join</button>
-                </form>
-
-                <!-- Create Room Form -->
-                <form id="createRoomForm" class="mt-4 d-none">
-                    <input type="text" class="form-control mb-3"
-                           id="roomNameInput" placeholder="Room name" required>
-                    <button type="submit" class="btn btn-success w-100">Create</button>
-                </form>
+          <form id="loginForm">
+            <div class="mb-3">
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                id="userNameInput"
+                placeholder="Enter username"
+                required
+              />
             </div>
-        </div>
-    </div>
-
-    <!-- Drawing Board -->
-    <div class="container d-none mx-auto" id="drawingContainer">
-        <div id="grid-container"></div>
-
-        <div class="d-flex flex-wrap justify-content-center align-items-center gap-2 my-3">
-            <input type="color" class="form-control form-control-color"
-                   id="colorPicker" value="#000000" title="Choose color">
-
-            <button class="btn btn-light" id="clear">
-                🗑️
+            <button type="submit" class="btn btn-primary w-100 btn-lg">
+              Login
             </button>
+          </form>
         </div>
+      </div>
 
-    </div>
-</main>
-<script type="module" src="./app.js"></script>
-</body>
+      <!-- Room Selection Section -->
+      <div class="container d-none" id="roomsContainer">
+        <div class="card mx-auto" style="max-width: 500px">
+          <div class="card-body text-center">
+            <h1 class="card-title mb-4">Welcome!</h1>
+            <div class="d-grid gap-3">
+              <button
+                class="btn btn-outline-primary btn-lg"
+                id="joinARoomButton"
+              >
+                Join Room
+              </button>
+              <button
+                class="btn btn-outline-success btn-lg"
+                id="createARoomButton"
+              >
+                Create Room
+              </button>
+            </div>
+
+            <!-- Join Room Form -->
+            <form id="joinRoomForm" class="mt-4 d-none">
+              <select class="form-select mb-3" id="roomsOptions"></select>
+              <button type="submit" class="btn btn-primary w-100">Join</button>
+            </form>
+
+            <!-- Create Room Form -->
+            <form id="createRoomForm" class="mt-4 d-none">
+              <input
+                type="text"
+                class="form-control mb-3"
+                id="roomNameInput"
+                placeholder="Room name"
+                required
+              />
+              <button type="submit" class="btn btn-success w-100">
+                Create
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drawing Board -->
+      <div class="container d-none mx-auto" id="drawingContainer">
+        <div id="boardWrapper">
+          <div id="grid-container"></div>
+
+          <div
+            class="d-flex flex-wrap justify-content-center align-items-center gap-3 my-3 p-3 border-3 border-dark rounded-3"
+          >
+            <input
+              type="color"
+              class="border-3 border-dark rounded-3 p-1"
+              id="colorPicker"
+              value="#000000"
+              title="Choose color"
+              style="width: 50px; height: 50px"
+            />
+
+            <button
+              class="btn btn-danger border-3 border-dark rounded-3 d-inline-flex align-items-center gap-2"
+              id="clear"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
 </html>
