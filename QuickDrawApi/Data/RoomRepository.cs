@@ -6,6 +6,11 @@ public static class RoomRepository
 {
     public static List<Room> Rooms { get; } = new();
 
+    public static bool Exists(string roomName)
+    {
+        return Rooms.Any(room => room.Name == roomName);
+    }
+    
     public static Room GetRoomByName(string roomName)
     {
         return Rooms.FirstOrDefault(room => room.Name == roomName);

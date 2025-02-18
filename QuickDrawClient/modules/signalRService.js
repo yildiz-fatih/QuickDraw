@@ -41,10 +41,15 @@ export function initializeSignalREvents() {
         domElements.userInfoElement.textContent = `Welcome ${state.currentUserName}`;
     })
 
+    connection.on("NewUserJoinedRoom", (room) => {
+        domElements.roomInfoElement.textContent = `Users in ${state.currentRoomName}: ${room.users.map(user => user.userName).join(", ")}`;
+    });
+
     connection.on("RoomJoined", (room) => {
+        // either it's the first see or the latter...
         state.currentRoomName = room.name;
         clearDOM();
-        initializeDrawing();
+        initializeDrawing(room.grid);
 
         domElements.roomInfoElement.textContent = `Users in ${state.currentRoomName}: ${room.users.map(user => user.userName).join(", ")}`;
     });
@@ -54,7 +59,7 @@ export function initializeSignalREvents() {
     });
 
     connection.on("ReceiveDrawingData", (data) => {
-        drawCell(data.cellIndex, data.color);
+        drawCell(data.row, data.column, data.color);
     });
 
     connection.on("ReceiveClearGrid", () => {

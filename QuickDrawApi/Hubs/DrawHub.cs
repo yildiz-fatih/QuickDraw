@@ -24,31 +24,74 @@ public class DrawHub : Hub
     
     public async Task JoinRoom(string roomName)
     {
-        // Get current user
-        var user = UserRepository.GetUserByConnectionId(Context.ConnectionId);
+        bool roomExists = RoomRepository.Exists(roomName);
 
-        // Find or create room
-        var room = RoomRepository.GetRoomByName(roomName);
-        if (room == null)
+        if (!roomExists)
         {
-            room = new Room { 
-                Name = roomName, 
-                Users = new List<User>() 
+            var grid = new Grid
+            {
+                Width = 24, // Columns
+                Height = 16, // Rows
+                Cells = new List<Cell>()
             };
+
+            // Populate the grid with cells
+            for (int row = 0; row < grid.Height; row++)
+            {
+                for (int col = 0; col < grid.Width; col++)
+                {
+                    grid.Cells.Add(new Cell() { Row = row, Column = col, Color = "#D8D8D8"});
+                }
+            }
+            
+            var room = new Room
+            {
+                Name = roomName,
+                Users = new List<User>(),
+                Grid = grid
+            };
+            
             RoomRepository.AddRoom(room);
+            
+            var user = UserRepository.GetUserByConnectionId(Context.ConnectionId);
+            room.Users.Add(user);
+            
+            await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
+            
+            // Update client on the current list of rooms
+            await Clients.All.SendAsync("ReceiveAvailableRooms", 
+                RoomRepository.GetAvailableRoomNames());
+            
+            //  if the room is newly created OR is being joined by a new user,
+            //         then the original user should receive all the room info
+            await Clients.Caller.SendAsync("RoomJoined", room);
         }
-
-        room.Users.Add(user);
-        
-        await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
-
-        // Update client on the current list of rooms
-        await Clients.All.SendAsync("ReceiveAvailableRooms", 
-            RoomRepository.GetAvailableRoomNames());
-        
-        // Send updated room users to everyone in the room
-        await Clients.Group(roomName).SendAsync("RoomJoined", 
-            room);
+        else
+        {
+            var room = RoomRepository.GetRoomByName(roomName);
+            var user = UserRepository.GetUserByConnectionId(Context.ConnectionId);
+            room.Users.Add(user);
+            
+            await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
+            
+            // Update client on the current list of rooms
+            await Clients.All.SendAsync("ReceiveAvailableRooms", 
+                RoomRepository.GetAvailableRoomNames());
+            
+            //  if the room is newly created OR is being joined by a new user,
+            //         then the original user should receive all the room info
+            await Clients.Caller.SendAsync("RoomJoined", room);
+            
+            // if the room existed before
+            // Send updated room users to everyone ELSE in the room
+            await Clients.OthersInGroup(roomName).SendAsync(
+                "NewUserJoinedRoom", 
+                new
+                {
+                    RoomName = room.Name,
+                    Users = room.Users
+                });
+        }
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
@@ -79,6 +122,11 @@ public class DrawHub : Hub
 
     public async Task BroadcastDrawingData(DrawingData drawingData)
     {
+        var currentRoom = RoomRepository.GetRoomByName(drawingData.RoomName);
+        var currentGrid = currentRoom.Grid;
+        var currentCell = currentGrid.Cells.FirstOrDefault(c => c.Row == drawingData.Row && c.Column == drawingData.Column);
+        currentCell.Color = drawingData.Color;
+
         await Clients.OthersInGroup(drawingData.RoomName).SendAsync("ReceiveDrawingData", drawingData);
     }
 

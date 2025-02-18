@@ -7,46 +7,48 @@ import { domElements } from "./domElements";
 import { state } from "./state";
 import { connection } from "./signalRService";
 
-let rows = 16;
-let cols = 24;
 let isDrawing = false;
 let currentColor = domElements.colorPicker.value;
 
 export class DrawingData {
-  constructor(roomName, cellIndex, color) {
-    this.roomName = roomName;
-    this.cellIndex = cellIndex;
+  constructor(row, column, color, roomName) {
+    this.row = row;
+    this.column = column;
     this.color = color;
+    this.roomName = roomName;
   }
 }
 
-export function initializeDrawing() {
+export function initializeDrawing(grid) {
   showInDOM(domElements.drawingContainer);
 
-  setupGrid();
+  drawGrid(grid);
   initializeDrawingEvents();
   initControlButtons();
 }
 
-function setupGrid() {
+function drawGrid(grid) {
   domElements.gridContainer.innerHTML = "";
-  const totalCells = rows * cols;
 
-  for (let i = 0; i < totalCells; i++) {
-    const cell = document.createElement("div");
-    cell.classList.add("grid-cell");
-    cell.style.flexBasis = `calc(100% / ${cols})`;
-    cell.style.height = `calc(100% / ${rows})`;
+  grid.cells.forEach(cell => {
+    const cellElement = document.createElement("div");
+    cellElement.classList.add("grid-cell");
 
-    cell.setAttribute("data-index", i);
+    cellElement.style.flexBasis = `calc(100% / ${grid.width})`;
+    cellElement.style.height = `calc(100% / ${grid.height})`;
 
-    domElements.gridContainer.appendChild(cell);
-  }
+    cellElement.style.backgroundColor = cell.color;
+
+    cellElement.setAttribute("data-row", cell.row);
+    cellElement.setAttribute("data-column", cell.column);
+
+    domElements.gridContainer.appendChild(cellElement);
+  });
 }
 
 export function clearGrid() {
   domElements.gridContainer.querySelectorAll(".grid-cell").forEach((cell) => {
-    cell.style.backgroundColor = "#ffffff";
+    cell.style.backgroundColor = "#D8D8D8";
   });
 }
 
@@ -56,11 +58,13 @@ function initializeDrawingEvents() {
       isDrawing = true;
       e.target.style.backgroundColor = currentColor;
 
-      const cellIndex = parseInt(e.target.getAttribute("data-index"));
+      const row = parseInt(e.target.getAttribute("data-row"));
+      const column = parseInt(e.target.getAttribute("data-column"));
       const drawingData = new DrawingData(
-        state.currentRoomName,
-        cellIndex,
-        currentColor
+          row,
+          column,
+          currentColor,
+          state.currentRoomName
       );
 
       connection.invoke("BroadcastDrawingData", drawingData);
@@ -71,11 +75,13 @@ function initializeDrawingEvents() {
     if (isDrawing && e.target.classList.contains("grid-cell")) {
       e.target.style.backgroundColor = currentColor;
 
-      const cellIndex = parseInt(e.target.getAttribute("data-index"));
+      const row = parseInt(e.target.getAttribute("data-row"));
+      const column = parseInt(e.target.getAttribute("data-column"));
       const drawingData = new DrawingData(
-        state.currentRoomName,
-        cellIndex,
-        currentColor
+          row,
+          column,
+          currentColor,
+          state.currentRoomName
       );
 
       connection.invoke("BroadcastDrawingData", drawingData);
@@ -87,9 +93,9 @@ function initializeDrawingEvents() {
   });
 }
 
-export function drawCell(cellIndex, color) {
+export function drawCell(row, column, color) {
   const cell = domElements.gridContainer.querySelector(
-    `[data-index="${cellIndex}"]`
+      `[data-row="${row}"][data-column="${column}"]`
   );
   cell.style.backgroundColor = color;
 }
