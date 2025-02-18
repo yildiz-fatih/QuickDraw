@@ -41,8 +41,8 @@ export function initializeSignalREvents() {
         domElements.userInfoElement.textContent = `Welcome ${state.currentUserName}`;
     })
 
-    connection.on("NewUserJoinedRoom", (room) => {
-        domElements.roomInfoElement.textContent = `Users in ${state.currentRoomName}: ${room.users.map(user => user.userName).join(", ")}`;
+    connection.on("NewUserJoinedRoom", (usernames) => {
+        domElements.roomInfoElement.textContent = `Users in ${state.currentRoomName}: ${usernames.join(", ")}`;
     });
 
     connection.on("RoomJoined", (room) => {

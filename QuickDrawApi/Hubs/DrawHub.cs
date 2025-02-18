@@ -24,84 +24,70 @@ public class DrawHub : Hub
     
     public async Task JoinRoom(string roomName)
     {
-        bool roomExists = RoomRepository.Exists(roomName);
+        var room = RoomRepository.GetRoomByName(roomName);
+        bool isNewRoom = false;
 
-        if (!roomExists)
+        if (room == null)
         {
-            var grid = new Grid
-            {
-                Width = 24, // Columns
-                Height = 16, // Rows
-                Cells = new List<Cell>()
-            };
+            isNewRoom = true;
 
-            // Populate the grid with cells
-            for (int row = 0; row < grid.Height; row++)
-            {
-                for (int col = 0; col < grid.Width; col++)
-                {
-                    grid.Cells.Add(new Cell() { Row = row, Column = col, Color = "#D8D8D8"});
-                }
-            }
-            
-            var room = new Room
+            var grid = GetDefaultGrid();
+        
+            room = new Room
             {
                 Name = roomName,
                 Users = new List<User>(),
                 Grid = grid
             };
-            
+        
             RoomRepository.AddRoom(room);
-            
-            var user = UserRepository.GetUserByConnectionId(Context.ConnectionId);
-            room.Users.Add(user);
-            
-            await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
-            
-            // Update client on the current list of rooms
-            await Clients.All.SendAsync("ReceiveAvailableRooms", 
-                RoomRepository.GetAvailableRoomNames());
-            
-            //  if the room is newly created OR is being joined by a new user,
-            //         then the original user should receive all the room info
-            await Clients.Caller.SendAsync("RoomJoined", room);
         }
-        else
+
+        var user = UserRepository.GetUserByConnectionId(Context.ConnectionId);
+        room.Users.Add(user);
+
+        if (!isNewRoom)
         {
-            var room = RoomRepository.GetRoomByName(roomName);
-            var user = UserRepository.GetUserByConnectionId(Context.ConnectionId);
-            room.Users.Add(user);
-            
-            await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
-            
-            // Update client on the current list of rooms
-            await Clients.All.SendAsync("ReceiveAvailableRooms", 
-                RoomRepository.GetAvailableRoomNames());
-            
-            //  if the room is newly created OR is being joined by a new user,
-            //         then the original user should receive all the room info
-            await Clients.Caller.SendAsync("RoomJoined", room);
-            
-            // if the room existed before
-            // Send updated room users to everyone ELSE in the room
             await Clients.OthersInGroup(roomName).SendAsync(
                 "NewUserJoinedRoom", 
-                new
-                {
-                    RoomName = room.Name,
-                    Users = room.Users
-                });
+                room.Users.Select(u => u.UserName).ToList()
+            );
         }
+    
+        await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
+    
+        // Update all clients with the current list of rooms
+        await Clients.All.SendAsync("ReceiveAvailableRooms", 
+            RoomRepository.GetAvailableRoomNames());
+    
+        // Send the room details to the caller
+        await Clients.Caller.SendAsync("RoomJoined", room);
+    }
+
+    private Grid GetDefaultGrid()
+    {
+        var grid = new Grid
+        {
+            Width = 24, // Columns
+            Height = 16, // Rows
+            Cells = new List<Cell>()
+        };
+
+        // Populate the grid with cells
+        for (int row = 0; row < grid.Height; row++)
+        {
+            for (int col = 0; col < grid.Width; col++)
+            {
+                grid.Cells.Add(new Cell() { Row = row, Column = col, Color = "#D8D8D8"});
+            }
+        }
+        
+        return grid;
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         var user = UserRepository.GetUserByConnectionId(Context.ConnectionId);
-        if (user == null)
-        {
-            await base.OnDisconnectedAsync(exception);
-            return;
-        }
 
         var room = RoomRepository.Rooms.FirstOrDefault(r => r.Users.Contains(user));
         if (room != null)
