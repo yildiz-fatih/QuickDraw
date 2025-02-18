@@ -24,7 +24,7 @@ export function initializeDrawing() {
   showInDOM(domElements.drawingContainer);
 
   setupGrid();
-  initDrawing();
+  initializeDrawingEvents();
   initControlButtons();
 }
 
@@ -50,7 +50,7 @@ export function clearGrid() {
   });
 }
 
-function initDrawing() {
+function initializeDrawingEvents() {
   domElements.gridContainer.addEventListener("mousedown", (e) => {
     if (e.target.classList.contains("grid-cell")) {
       isDrawing = true;
