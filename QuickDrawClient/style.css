@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  background-color: #0066ff;
+  background-color: #78cccb;
 }
 
 .navbar {
@@ -10,12 +10,17 @@ body {
 }
 
 #boardWrapper {
-  background-color: #fff000;
+  background-color: #ff5e5b;
   border-radius: 20px;
-  padding: 2rem;
+  padding: 3rem;
   text-align: center;
   max-width: 900px;
   margin: 2rem auto;
+}
+
+#boardWrapper {
+  transform: scale(1.1);
+  transform-origin: top center; /* Adjust origin as needed */
 }
 
 #grid-container {
@@ -29,7 +34,7 @@ body {
 }
 
 .grid-cell {
-  border: 1px solid black;
+  border: 0.1px solid black;
   box-sizing: border-box;
 }
 
@@ -49,8 +54,6 @@ body {
 
 #clear,
 #colorPicker {
-  min-width: 50px;
-  min-height: 50px;
   cursor: pointer;
   transition: transform 0.2s;
 }
@@ -58,4 +61,13 @@ body {
 #clear:hover,
 #colorPicker:hover {
   transform: scale(1.1);
+}
+
+#colorPicker {
+  width: 60px;
+  height: 60px;
+}
+
+#clear {
+  font-size: 1.5rem;
 }

@@ -72,8 +72,8 @@ public class DrawHub : Hub
     {
         var grid = new Grid
         {
-            Width = 24, // Columns
-            Height = 16, // Rows
+            Width = 36, // Columns
+            Height = 24, // Rows
             Cells = new List<Cell>()
         };
 
