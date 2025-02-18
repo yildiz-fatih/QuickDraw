@@ -25,7 +25,7 @@ export function initializeEventHandlers() {
 
         const roomName = document.getElementById("roomNameInput").value;
 
-        connection.invoke("JoinRoom", roomName);
+        connection.invoke("CreateRoom", roomName);
     });
 
     domElements.joinRoomForm.addEventListener("submit", (e) => {

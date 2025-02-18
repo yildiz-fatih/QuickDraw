@@ -21,38 +21,42 @@ public class DrawHub : Hub
         await Clients.All.SendAsync("ReceiveAvailableRooms", 
             RoomRepository.GetAvailableRoomNames());
     }
+
+    public async Task CreateRoom(string roomName)
+    {
+        var room = new Room
+        {
+            Name = roomName,
+            Users = new List<User>(),
+            Grid = GetDefaultGrid()
+        };
+        
+        RoomRepository.AddRoom(room);
+        
+        var user = UserRepository.GetUserByConnectionId(Context.ConnectionId);
+        room.Users.Add(user);
+
+        await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
+    
+        // Update all clients with the current list of rooms
+        await Clients.All.SendAsync("ReceiveAvailableRooms", 
+            RoomRepository.GetAvailableRoomNames());
+    
+        // Send the room details to the caller
+        await Clients.Caller.SendAsync("RoomJoined", room);
+    }
     
     public async Task JoinRoom(string roomName)
     {
         var room = RoomRepository.GetRoomByName(roomName);
-        bool isNewRoom = false;
-
-        if (room == null)
-        {
-            isNewRoom = true;
-
-            var grid = GetDefaultGrid();
-        
-            room = new Room
-            {
-                Name = roomName,
-                Users = new List<User>(),
-                Grid = grid
-            };
-        
-            RoomRepository.AddRoom(room);
-        }
 
         var user = UserRepository.GetUserByConnectionId(Context.ConnectionId);
         room.Users.Add(user);
 
-        if (!isNewRoom)
-        {
-            await Clients.OthersInGroup(roomName).SendAsync(
-                "NewUserJoinedRoom", 
-                room.Users.Select(u => u.UserName).ToList()
-            );
-        }
+        await Clients.OthersInGroup(roomName).SendAsync(
+            "NewUserJoinedRoom", 
+            room.Users.Select(u => u.UserName).ToList()
+        );
     
         await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
     
