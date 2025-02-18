@@ -30,7 +30,7 @@ export function initializeDrawing(grid) {
 function drawGrid(grid) {
   domElements.gridContainer.innerHTML = "";
 
-  grid.cells.forEach(cell => {
+  grid.cells.forEach((cell) => {
     const cellElement = document.createElement("div");
     cellElement.classList.add("grid-cell");
 
@@ -61,10 +61,10 @@ function initializeDrawingEvents() {
       const row = parseInt(e.target.getAttribute("data-row"));
       const column = parseInt(e.target.getAttribute("data-column"));
       const drawingData = new DrawingData(
-          row,
-          column,
-          currentColor,
-          state.currentRoomName
+        row,
+        column,
+        currentColor,
+        state.currentRoomName
       );
 
       connection.invoke("UpdateCellRequest", drawingData);
@@ -78,10 +78,10 @@ function initializeDrawingEvents() {
       const row = parseInt(e.target.getAttribute("data-row"));
       const column = parseInt(e.target.getAttribute("data-column"));
       const drawingData = new DrawingData(
-          row,
-          column,
-          currentColor,
-          state.currentRoomName
+        row,
+        column,
+        currentColor,
+        state.currentRoomName
       );
 
       connection.invoke("UpdateCellRequest", drawingData);
@@ -95,7 +95,7 @@ function initializeDrawingEvents() {
 
 export function drawCell(row, column, color) {
   const cell = domElements.gridContainer.querySelector(
-      `[data-row="${row}"][data-column="${column}"]`
+    `[data-row="${row}"][data-column="${column}"]`
   );
   cell.style.backgroundColor = color;
 }

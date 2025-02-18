@@ -1,4 +1,4 @@
 export const state = {
-    currentUserName: "",
-    currentRoomName: "",
+  currentUserName: "",
+  currentRoomName: "",
 };
