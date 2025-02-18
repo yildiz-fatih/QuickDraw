@@ -19,7 +19,7 @@ export async function startConnection() {
 }
 
 export function initializeSignalREvents() {
-    connection.on("ReceiveAvailableRooms", (roomNames) => {
+    connection.on("AvailableRoomsUpdated", (roomNames) => {
         const optionsDropdown = document.getElementById("roomsOptions");
         optionsDropdown.innerHTML = ""; // Clear existing options
 
@@ -41,11 +41,11 @@ export function initializeSignalREvents() {
         domElements.userInfoElement.textContent = `Welcome ${state.currentUserName}`;
     })
 
-    connection.on("NewUserJoinedRoom", (usernames) => {
+    connection.on("RoomParticipantsUpdated", (usernames) => {
         domElements.roomInfoElement.textContent = `Users in ${state.currentRoomName}: ${usernames.join(", ")}`;
     });
 
-    connection.on("RoomJoined", (room) => {
+    connection.on("RoomEntered", (room) => {
         // either it's the first see or the latter...
         state.currentRoomName = room.name;
         clearDOM();
@@ -54,15 +54,11 @@ export function initializeSignalREvents() {
         domElements.roomInfoElement.textContent = `Users in ${state.currentRoomName}: ${room.users.map(user => user.userName).join(", ")}`;
     });
 
-    connection.on("RoomLeft", (userNames) => {
-        domElements.roomInfoElement.textContent = `Users in ${state.currentRoomName}: ${userNames.join(", ")}`;
-    });
-
-    connection.on("ReceiveDrawingData", (data) => {
+    connection.on("CellUpdated", (data) => {
         drawCell(data.row, data.column, data.color);
     });
 
-    connection.on("ReceiveClearGrid", () => {
+    connection.on("GridCleared", () => {
         clearGrid();
     });
 }

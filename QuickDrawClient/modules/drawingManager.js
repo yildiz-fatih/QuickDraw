@@ -67,7 +67,7 @@ function initializeDrawingEvents() {
           state.currentRoomName
       );
 
-      connection.invoke("BroadcastDrawingData", drawingData);
+      connection.invoke("UpdateCellRequest", drawingData);
     }
   });
 
@@ -84,7 +84,7 @@ function initializeDrawingEvents() {
           state.currentRoomName
       );
 
-      connection.invoke("BroadcastDrawingData", drawingData);
+      connection.invoke("UpdateCellRequest", drawingData);
     }
   });
 
@@ -108,6 +108,6 @@ function initControlButtons() {
   domElements.clearBtn.addEventListener("click", () => {
     clearGrid();
 
-    connection.invoke("BroadcastClearGrid", state.currentRoomName);
+    connection.invoke("ClearGridRequest", state.currentRoomName);
   });
 }

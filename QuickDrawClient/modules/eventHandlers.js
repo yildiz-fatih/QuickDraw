@@ -7,7 +7,7 @@ export function initializeEventHandlers() {
         e.preventDefault();
 
         const userName = document.getElementById("userNameInput").value;
-        connection.invoke("Login", userName);
+        connection.invoke("LoginUserRequest", userName);
     });
 
     domElements.joinARoomButton.addEventListener("click", () => {
@@ -25,7 +25,7 @@ export function initializeEventHandlers() {
 
         const roomName = document.getElementById("roomNameInput").value;
 
-        connection.invoke("CreateRoom", roomName);
+        connection.invoke("CreateRoomRequest", roomName);
     });
 
     domElements.joinRoomForm.addEventListener("submit", (e) => {
@@ -33,6 +33,6 @@ export function initializeEventHandlers() {
 
         const roomName = document.getElementById("roomsOptions").value;
 
-        connection.invoke("JoinRoom", roomName);
+        connection.invoke("JoinRoomRequest", roomName);
     })
 }
